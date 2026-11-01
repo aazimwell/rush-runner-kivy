@@ -54,6 +54,12 @@ jobs:
       - name: Build APK (debug)
         env:
           ACLOCAL_PATH: /usr/share/aclocal:/usr/local/share/aclocal
+          # p4a's build venv runs "pip install -U pip", which upgrades to
+          # pip 25+/26 where BuildDependencyInstallError was removed from
+          # pip._internal.exceptions, breaking old p4a code. Pinning pip
+          # below 25 in that venv (via a constraints file) keeps the
+          # import working.
+          PIP_CONSTRAINT: ${{ github.workspace }}/constraints.txt
         run: |
           # Buildozer's first run downloads the Android SDK and prompts
           # to accept its licences; on a non-interactive runner the
